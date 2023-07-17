@@ -18,5 +18,6 @@ from django.urls import path
 from application import views
 
 urlpatterns = [
-    path('healthcheck/', views.healthcheck),
+    path('healthcheck', views.healthcheck),
+    path('webhook', views.webhook),
 ]
