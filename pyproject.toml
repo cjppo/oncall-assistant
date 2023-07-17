@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "oncall-assistant"
+version = "0.1.0"
+description = ""
+authors = ["jie.cao <jiec@squareup.com>"]
+readme = "README.md"
+packages = [{include = "oncall_assistant"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+django = "^3.2.18"
+djangorestframework-jsonapi = "^6.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
