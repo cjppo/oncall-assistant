@@ -1,0 +1,16 @@
+databases:
+  - name: oncall-assistant
+    databaseName: oncall-assistant
+    user: oncall-assistant
+
+services:
+  - type: web
+    name: oncall-assistant
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn oncall_assistant.wsgi:application"
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 10
