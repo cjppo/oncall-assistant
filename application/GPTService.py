@@ -29,11 +29,11 @@ class GPTService:
                 },
                 {
                     "role": "user",
-                    "content": "if no project is related to sentence, just return: unknown project"
+                    "content": "if no project is related to sentence, just output: affliate"
                 },
                 {
                     "role": "user",
-                    "content": "plese only output the project name"
+                    "content": "please answer only one word in the list: [Promotion,Rewards,affliate]"
                 }
             ]
         }
@@ -50,5 +50,7 @@ class GPTService:
             return TeamEnum.PROMO
         elif team == "Rewards":
             return TeamEnum.REWARDS
+        elif team == "affliate":
+            return TeamEnum.AFFILIATE
         else:
             return TeamEnum.UNKNOWN
