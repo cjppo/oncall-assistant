@@ -119,11 +119,12 @@ def webhook(request):
         print("body: \n {}\n".format(body))
         result = gptAssistant.classify_message(message)
         ts = body["event"]["ts"]
-        if result.priority == MessagePriority.High:
-            mention_group(ts, result.belongs_to, 'C05H9PJRM34')
-            send_direct_message(result.belongs_to, message, 'C05H9PJRM34')
-        else:
-            mention_group(ts, result.belongs_to)
+        if result.belongs_to != TeamEnum.UNKNOWN:
+            if result.priority == MessagePriority.High:
+                mention_group(ts, result.belongs_to, 'C05H9PJRM34')
+                send_direct_message(result.belongs_to, message, 'C05H9PJRM34')
+            else:
+                mention_group(ts, result.belongs_to)
     return HttpResponse(
         "challenge",
         content_type="application/json"
