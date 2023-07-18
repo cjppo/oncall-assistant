@@ -12,6 +12,7 @@ django = "^3.2.18"
 djangorestframework-jsonapi = "^6.0.0"
 gunicorn = "^20.1.0"
 slack-sdk = "^3.21.3"
+requests = "^2.31.0"
 
 
 [build-system]
