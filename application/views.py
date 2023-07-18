@@ -1,8 +1,4 @@
-import base64
-import json
-import os
 import time
-from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
@@ -20,6 +16,7 @@ from application.models import MessagePriority, TeamEnum
 # When using Bolt, you can use either `app.client` or the `client` passed to listeners.
 client = WebClient(token=os.environ.get("SLACK_BOT_TOKEN"))
 logger = logging.getLogger(__name__)
+group_id = os.environ.get("SLACK_HACKTHON_GROUP")
 
 # Create your views here.
 
@@ -38,28 +35,28 @@ def healthcheck(request):
 
 def mention_group(ts, belongs_to, channel_id):
     if belongs_to == TeamEnum.PROMO:
-        send_slack_message(channel_id, ts, "U02V59SCY6P")
+        send_slack_message(channel_id, ts, group_id)
     elif belongs_to == TeamEnum.REWARDS:
-        send_slack_message(channel_id, ts, "U02V59SFALB")
+        send_slack_message(channel_id, ts, group_id)
     elif belongs_to == TeamEnum.ADSM:
-        send_slack_message(channel_id, ts, "U02UQL045PZ")
+        send_slack_message(channel_id, ts, group_id)
     elif belongs_to == TeamEnum.AFFILIATE:
-        send_slack_message(channel_id, ts, "U02V4SFTFTL")
+        send_slack_message(channel_id, ts, group_id)
     else:
-        send_slack_message(channel_id, ts, "U02V4SFTFTL")
+        send_slack_message(channel_id, ts, group_id)
 
 
 def send_direct_message(belongs_to):
     if belongs_to == TeamEnum.PROMO:
-        send_slack_message("U02V59SCY6P", None, "U02V59SCY6P")
+        send_slack_message(group_id, None, group_id)
     elif belongs_to == TeamEnum.REWARDS:
-        send_slack_message("U02V59SFALB", None, "U02V59SFALB")
+        send_slack_message(group_id, None, group_id)
     elif belongs_to == TeamEnum.ADSM:
-        send_slack_message("U02UQL045PZ", None, "U02UQL045PZ")
+        send_slack_message(group_id, None, group_id)
     elif belongs_to == TeamEnum.AFFILIATE:
-        send_slack_message("U02V4SFTFTL", None, "U02V4SFTFTL")
+        send_slack_message(group_id, None, group_id)
     else:
-        send_slack_message("U02V4SFTFTL", None, "U02V4SFTFTL")
+        send_slack_message(group_id, None, group_id)
 
 
 def send_slack_message(channel_id, ts, userid):
@@ -67,7 +64,7 @@ def send_slack_message(channel_id, ts, userid):
         result = client.chat_postMessage(
             channel=channel_id,
             thread_ts=ts,
-            text="<@{}>".format(userid)
+            text="{}".format(userid)
         )
         print(result)
 
