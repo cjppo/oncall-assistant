@@ -128,3 +128,14 @@ def webhook(request):
         "challenge",
         content_type="application/json"
     )
+
+@api_view(['POST'])
+@csrf_exempt
+def test_gpt(request):
+    body = json.loads(request.body)
+    message = body["message"]
+    response = gptAssistant.classify_message(message)
+    return HttpResponse(
+        response,
+        content_type="application/json"
+    )
