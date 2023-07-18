@@ -86,7 +86,7 @@ def webhook(request):
         result = gptAssistant.classify_message(message)
         ts = body["event"]["ts"]
         if (result.priority == MessagePriority.High):
-            mention_group(ts, result.belongs_to)
+            mention_group(ts, result.belongs_to, 'C05H9PJRM34')
             send_direct_message(result.belongs_to)
         else:
             mention_group(ts, result.belongs_to)
