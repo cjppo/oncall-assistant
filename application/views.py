@@ -16,7 +16,10 @@ from application.models import MessagePriority, TeamEnum
 # When using Bolt, you can use either `app.client` or the `client` passed to listeners.
 client = WebClient(token=os.environ.get("SLACK_BOT_TOKEN"))
 logger = logging.getLogger(__name__)
-group_id = os.environ.get("SLACK_HACKTHON_GROUP")
+group_id_affiliate = os.environ.get("SLACK_AFFILIATE_GROUP")
+group_id_adsm = os.environ.get("SLACK_ADSM_GROUP")
+group_id_promo = os.environ.get("SLACK_PROMO_GROUP")
+group_id_rewards = os.environ.get("SLACK_REWARDS_GROUP")
 
 # Create your views here.
 
@@ -35,28 +38,28 @@ def healthcheck(request):
 
 def mention_group(ts, belongs_to, channel_id):
     if belongs_to == TeamEnum.PROMO:
-        send_slack_message(channel_id, ts, group_id)
+        send_slack_message(channel_id, ts, group_id_promo)
     elif belongs_to == TeamEnum.REWARDS:
-        send_slack_message(channel_id, ts, group_id)
+        send_slack_message(channel_id, ts, group_id_rewards)
     elif belongs_to == TeamEnum.ADSM:
-        send_slack_message(channel_id, ts, group_id)
+        send_slack_message(channel_id, ts, group_id_adsm)
     elif belongs_to == TeamEnum.AFFILIATE:
-        send_slack_message(channel_id, ts, group_id)
+        send_slack_message(channel_id, ts, group_id_affiliate)
     else:
-        send_slack_message(channel_id, ts, group_id)
+        send_slack_message(channel_id, ts, group_id_rewards)
 
 
 def send_direct_message(belongs_to):
     if belongs_to == TeamEnum.PROMO:
-        send_slack_message(group_id, None, group_id)
+        send_slack_message(group_id_promo, None, group_id_promo)
     elif belongs_to == TeamEnum.REWARDS:
-        send_slack_message(group_id, None, group_id)
+        send_slack_message(group_id_rewards, None, group_id_rewards)
     elif belongs_to == TeamEnum.ADSM:
-        send_slack_message(group_id, None, group_id)
+        send_slack_message(group_id_adsm, None, group_id_adsm)
     elif belongs_to == TeamEnum.AFFILIATE:
-        send_slack_message(group_id, None, group_id)
+        send_slack_message(group_id_affiliate, None, group_id_affiliate)
     else:
-        send_slack_message(group_id, None, group_id)
+        send_slack_message(group_id_rewards, None, group_id_rewards)
 
 
 def send_slack_message(channel_id, ts, userid):
