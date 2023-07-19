@@ -9,7 +9,7 @@ import os
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 
-from application.GPTService import GPTService
+from application import GPTService
 from application.models import MessagePriority, TeamEnum
 
 # WebClient instantiates a client that can call API methods
@@ -22,9 +22,8 @@ group_id_promo = os.environ.get("SLACK_PROMO_GROUP")
 group_id_rewards = os.environ.get("SLACK_REWARDS_GROUP")
 user_id_map = json.loads(os.environ.get("USER_ID_MAP"))
 
-# Create your views here.
 
-gptAssistant = GPTService()
+# Create your views here.
 
 
 @api_view(['GET'])
@@ -83,25 +82,25 @@ def send_direct_slack_message(user_id, channel_id, ts, message):
             thread_ts=ts,
             text=message,
             blocks=[{
-                        "type": "header",
-                        "text": {
-                            "type": "plain_text",
-                            "text": "New Message to pay attention to"
+                "type": "header",
+                "text": {
+                    "type": "plain_text",
+                    "text": "New Message to pay attention to"
+                }
+            },
+                {
+                    "type": "section",
+                    "fields": [
+                        {
+                            "type": "mrkdwn",
+                            "text": ">{}".format(message)
+                        },
+                        {
+                            "type": "mrkdwn",
+                            "text": "from <#{}>".format(channel_id)
                         }
-                    },
-                    {
-                        "type": "section",
-                        "fields": [
-                            {
-                                "type": "mrkdwn",
-                                "text": ">{}".format(message)
-                            },
-                            {
-                                "type": "mrkdwn",
-                                "text": "from <#{}>".format(channel_id)
-                            }
-                        ]
-                    }]
+                    ]
+                }]
         )
         print(result)
 
@@ -116,26 +115,28 @@ def webhook(request):
     channel = body["event"]["channel"]
     if channel == 'C05H9PJRM34' and "parent_user_id" not in body["event"]:
         message = body["event"]["text"]
-        print("body: \n {}\n".format(body))
-        result = gptAssistant.classify_message(message)
-        ts = body["event"]["ts"]
-        if result.belongs_to != TeamEnum.UNKNOWN:
-            if result.priority == MessagePriority.High:
-                mention_group(ts, result.belongs_to, 'C05H9PJRM34')
-                send_direct_message(result.belongs_to, message, 'C05H9PJRM34')
-            else:
-                mention_group(ts, result.belongs_to)
+        # print("body: \n {}\n".format(body))
+        if GPTService.check_message_if_need_to_deal(message):
+            result = GPTService.classify_message(message)
+            ts = body["event"]["ts"]
+            if result.belongs_to != TeamEnum.UNKNOWN:
+                if result.priority == MessagePriority.High:
+                    mention_group(ts, result.belongs_to, 'C05H9PJRM34')
+                    send_direct_message(result.belongs_to, message, 'C05H9PJRM34')
+                else:
+                    mention_group(ts, result.belongs_to)
     return HttpResponse(
         "challenge",
         content_type="application/json"
     )
+
 
 @api_view(['POST'])
 @csrf_exempt
 def test_gpt(request):
     body = json.loads(request.body)
     message = body["message"]
-    response = gptAssistant.classify_message(message)
+    response = GPTService.classify_message(message)
     return HttpResponse(
         response,
         content_type="application/json"
