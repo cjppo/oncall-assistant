@@ -36,6 +36,7 @@ def check_message_if_need_to_deal(message: str):
     }
     response = requests.post(url, headers=headers, json=body)
     if response.ok:
+        print(response.json()['choices'][0]['message']['content'])
         return str(response.json()['choices'][0]['message']['content']).lower().startswith('yes')
     else:
         return False
@@ -67,6 +68,7 @@ def classify_message(message: str):
     }
     response = requests.post(url, headers=headers, json=body)
     if response.ok:
+        print(response.json()['choices'][0]['message']['content'])
         return MessageAssistAdvice(MessagePriority.High,
                                    to_team_enum(response.json()['choices'][0]['message']['content']))
     else:
