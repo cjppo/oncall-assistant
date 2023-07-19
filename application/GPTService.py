@@ -26,11 +26,11 @@ def check_message_if_need_to_deal(message: str):
         "messages": [
             {
                 "role": "user",
-                "content": gpt_message_check_content.format(message)
+                "content": gpt_message_check_content
             },
             {
                 "role": "user",
-                "content": "now, if someone send a message(wrapped by triple *): ***Connexity product feed is live in prod, we can inject CXY feeds anytime*** please help to check if we should respond to it based on rules I told to you above. \n And your answer should be only yes or no, no any other words, punctuation marks or sentences".format(message)
+                "content": "now, if someone send a message(wrapped by triple *): ***{}*** please help to check if we should respond to it based on rules I told to you above. \n And your answer should be only yes or no, no any other words, punctuation marks or sentences".format(message)
             }
         ]
     }
